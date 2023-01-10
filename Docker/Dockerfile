@@ -18,6 +18,7 @@ RUN ln -fs /usr/share/zoneinfo/America/New_York /etc/localtime && \
 
 
 RUN apt-get install -y apache2
+RUN a2enmod rewrite
 
 RUN apt-get install -y mariadb-server-10.1 mariadb-client-10.1 mariadb-common
 
@@ -43,10 +44,16 @@ php7.1-xml \
 php7.1-cli \ 
 php7.1-zip
 
-RUN service apache2 restart
-RUN service mysql start
+ENV PHP_UPLOAD_MAX_FILESIZE=32M
+ENV PHP_POST_MAX_SIZE=32M
 
-EXPOSE 80/tcp
-EXPOSE 3306/tcp
+COPY start.sh start.sh
+RUN chmod +x start.sh
 
-ENTRYPOINT ["bash"]
+COPY phpminiadmin.php /var/wwww/html/phpminiadmin.php
+
+VOLUME ["/var/www/html"]
+
+EXPOSE 3306 80
+
+CMD ./start.sh
