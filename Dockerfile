@@ -1,12 +1,13 @@
-FROM php:7.1.33-apache
+FROM --platform=amd64 php:7.1.10-apache
 ARG DEBIAN_FRONTEND=noninteractive
 
+RUN apt-get update -y
+RUN apt-get upgrade -y --force-yes
 
-RUN apt-get update && apt-get upgrade -y\
-    && apt-get install -y libpng-dev \
-    && apt-get install -y libzip-dev \
-    && apt-get install -y curl \
-    && apt-get install -y zip unzip 
+RUN apt-get install -y --force-yes libpng-dev 
+RUN apt-get install -y --force-yes libzip-dev
+RUN apt-get install -y --force-yes curl
+RUN apt-get install -y --force-yes zip unzip 
 
 RUN docker-php-ext-install mbstring
 RUN docker-php-ext-install zip
